@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+    <!--Dummy item to keep the editText field from gaining focus -->
+    <LinearLayout
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:layout_width="0px"
+            android:layout_height="0px"/>
+    <TextView
+            android:id="@+id/Subject_ID"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:gravity="center_vertical"
+            android:text="Subject ID: "
+            android:textStyle="bold"
+            android:textSize="20dp"
+            android:textColor="@android:color/white"/>
+    <EditText
+            android:id="@+id/subject_ID_editText"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:gravity="center_vertical"
+            android:layout_toRightOf="@+id/Subject_ID"
+            android:text="ID#HERE"
+            android:textSize="20dp" android:inputType="number"/>
+    <ImageView
+            android:id="@+id/Preview"
+            android:layout_width="360dp"
+            android:layout_height="270dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="75dp"/>
+    <TextView
+            android:id="@+id/Preview_Label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:layout_below="@+id/Preview"
+            android:text="Captured Image: "
+            android:textStyle="bold"
+            android:textSize="20dp"
+            android:textColor="@android:color/white"/>
+    <Button
+            android:id="@+id/Save_Button"
+            android:layout_width="75dp"
+            android:layout_height="wrap_content"
+            android:text="Save"
+            android:layout_alignParentBottom="true"
+            android:layout_alignLeft="@+id/surfaceView"
+            android:onClick="saveButton"/>
+    <Button
+            android:id="@+id/Discard_Button"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="Discard"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:onClick="confirmDiscard"/>
+    <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:layout_alignParentLeft="true"
+            android:orientation="horizontal"
+            android:layout_alignParentEnd="false"
+            android:id="@+id/EyeSelection"
+            android:layout_below="@+id/Subject_ID"
+            android:checkedButton="@+id/radioLeft">
+            <RadioButton android:id="@+id/radioLeft"
+                    android:text="Left Eye"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:onClick="radioGroupEyeSelection"/>
+            <RadioButton android:id="@+id/radioRight"
+                    android:text="Right Eye"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:onClick="radioGroupEyeSelection"/>
+    </RadioGroup>
+</RelativeLayout>

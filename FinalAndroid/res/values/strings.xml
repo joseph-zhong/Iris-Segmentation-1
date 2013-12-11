@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">TannerSegmentation</string>
+    <string name="blank_string"></string>
+    <string name="back_camera">Back Camera</string>
+    <string name="front_camera">Front Camera</string>
+    <string name="menu_quit">Quit</string>
+    <string name="menu_select_camera">Select Camera</string>
+    <string name="external_camera">External Camera</string>
+    <string name="no_camera">No Cameras Detected</string>
+    <string name="menu_subject_id">Set Subject ID</string>
+</resources>

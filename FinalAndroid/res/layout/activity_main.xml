@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        xmlns:android="http://schemas.android.com/apk/res/android">
+    <TextView
+            android:id="@+id/SubjectID"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:text="Subject: IMG"
+            android:textStyle="bold"
+            android:textSize="20dp"
+            android:textColor="@android:color/white"/>
+    <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:id="@+id/CameraSelectionStatus"
+            android:layout_below="@+id/SubjectID"
+
+            android:text="Which Camera"
+            android:textStyle="bold"
+            android:textSize="20dp"
+            android:textColor="@android:color/white"/>
+    <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/surfaceView"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:background="@android:color/darker_gray"/>
+    
+    <Button
+            android:layout_width="fill_parent"
+            android:layout_height="100dp"
+            android:text="Capture Image"
+            android:id="@+id/CaptureImage"
+            android:layout_alignParentBottom="true"
+            android:layout_alignLeft="@+id/surfaceView"
+            android:onClick="captureImage"/>
+</RelativeLayout>

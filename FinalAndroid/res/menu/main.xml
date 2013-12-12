@@ -17,6 +17,8 @@
         android:id="@+id/menu_set_subject_id"
         android:title="@string/menu_subject_id"/>
     <item
+        android:title="@string/myName"/>
+    <item
         android:id="@+id/menu_quit"
         android:orderInCategory="100"
         android:showAsAction="never"

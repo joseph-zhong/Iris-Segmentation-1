@@ -26,11 +26,11 @@ public final class R {
     public static final class id {
         public static final int CameraSelectionStatus=0x7f080001;
         public static final int CaptureImage=0x7f080003;
-        public static final int Discard_Button=0x7f080009;
-        public static final int EyeSelection=0x7f08000a;
+        public static final int Discard_Button=0x7f08000a;
+        public static final int EyeSelection=0x7f080007;
         public static final int Preview=0x7f080006;
-        public static final int Preview_Label=0x7f080007;
-        public static final int Save_Button=0x7f080008;
+        public static final int Preview_Label=0x7f080008;
+        public static final int Save_Button=0x7f080009;
         public static final int SubjectID=0x7f080000;
         public static final int Subject_ID=0x7f080004;
         public static final int menu_back_camera=0x7f08000f;
@@ -60,6 +60,7 @@ public final class R {
         public static final int menu_quit=0x7f050004;
         public static final int menu_select_camera=0x7f050005;
         public static final int menu_subject_id=0x7f050008;
+        public static final int myName=0x7f050009;
         public static final int no_camera=0x7f050007;
     }
     public static final class style {

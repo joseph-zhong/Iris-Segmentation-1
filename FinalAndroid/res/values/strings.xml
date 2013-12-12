@@ -9,4 +9,5 @@
     <string name="external_camera">External Camera</string>
     <string name="no_camera">No Cameras Detected</string>
     <string name="menu_subject_id">Set Subject ID</string>
+    <string name="myName">Developer: Ryan Tanner</string>
 </resources>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string name="app_name">TannerSegmentation</string>
-    <string name="blank_string"></string>
     <string name="back_camera">Back Camera</string>
     <string name="front_camera">Front Camera</string>
     <string name="menu_quit">Quit</string>
@@ -10,4 +10,13 @@
     <string name="no_camera">No Cameras Detected</string>
     <string name="menu_subject_id">Set Subject ID</string>
     <string name="myName">Developer: Ryan Tanner</string>
+    <string name="subject_id">Subject ID: </string>
+    <string name="set_id">ID#HERE</string>
+    <string name="image_name">Image Name</string>
+    <string name="save_image">Save</string>
+    <string name="delete_image">Delete</string>
+    <string name="left_eye">Left Eye</string>
+    <string name="right_eye">Right Eye</string>
+    <string name="take_picture">Take Picture</string>
+
 </resources>

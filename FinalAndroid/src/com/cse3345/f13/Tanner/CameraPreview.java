@@ -1,6 +1,5 @@
 package com.cse3345.f13.Tanner;
 
-
 import android.content.Context;
 import android.hardware.Camera;
 import android.util.Log;
@@ -9,78 +8,64 @@ import android.view.SurfaceView;
 
 import java.io.IOException;
 
-public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
-{
-    private SurfaceHolder mHolder;
-    private Camera mCamera;
+public class CameraPreview extends SurfaceView implements
+		SurfaceHolder.Callback {
+	private SurfaceHolder mHolder;
+	private Camera mCamera;
 
+	public CameraPreview(Context context, Camera camera) {
+		super(context);
+		mCamera = camera;
 
-    public CameraPreview(Context context, Camera camera)
-    {
-        super(context);
-        mCamera = camera;
+		// Install a SurfaceHolder.Callback so we get notified when the
+		// underlying surface is created and destroyed.
+		mHolder = getHolder();
+		mHolder.addCallback(this);
+	}
 
-        // Install a SurfaceHolder.Callback so we get notified when the
-        // underlying surface is created and destroyed.
-        mHolder = getHolder();
-        mHolder.addCallback(this);
-    }
+	public void surfaceCreated(SurfaceHolder holder) {
+		// The Surface has been created, now tell the camera where to draw the
+		// preview.
+		try {
+			mCamera.setPreviewDisplay(holder);
+			mCamera.startPreview();
 
-    public void surfaceCreated(SurfaceHolder holder)
-    {
-        // The Surface has been created, now tell the camera where to draw the preview.
-        try
-        {
-            mCamera.setPreviewDisplay(holder);
-            mCamera.startPreview();
+		} catch (IOException e) {
+		}
+	}
 
-        }
-        catch(IOException e)
-        {
-        }
-    }
+	public void surfaceChanged(SurfaceHolder holder, int format, int w, int h) {
 
-    public void surfaceDestroyed(SurfaceHolder holder)
-    {
-        // empty. Take care of releasing the Camera preview in your activity.
-    }
+		if (mHolder.getSurface() == null) {
+			// preview surface does not exist
+			return;
+		}
 
-    public void surfaceChanged(SurfaceHolder holder, int format, int w, int h)
-    {
-        // If your preview can change or rotate, take care of those events here.
-        // Make sure to stop the preview before resizing or reformatting it.
+		// stop preview before making changes
+		try {
+			mCamera.stopPreview();
+		} catch (Exception e) {
+		}
 
-        if(mHolder.getSurface() == null)
-        {
-            // preview surface does not exist
-            return;
-        }
+		// set preview and camera sizes
+		Camera.Parameters camParams = mCamera.getParameters();
+		camParams.setPreviewSize(640, 480);
+		camParams.setPictureSize(640, 480);
+		mCamera.setParameters(camParams);
 
-        // stop preview before making changes
-        try
-        {
-            mCamera.stopPreview();
-        } catch(Exception e)
-        {
-            // ignore: tried to stop a non-existent preview
-        }
+		// start preview with new settings
+		try {
+			mCamera.setPreviewDisplay(mHolder);
+			mCamera.startPreview();
 
-        // set preview size and make any resize, rotate or
-        // reformatting changes here
-        Camera.Parameters camParams = mCamera.getParameters();
-        camParams.setPreviewSize(640,480);
-        camParams.setPictureSize(640, 480);
-        mCamera.setParameters(camParams);
+		} catch (Exception e) {
+			Log.d("Error", "Error starting camera preview: " + e.getMessage());
+		}
+	}
 
-        // start preview with new settings
-        try
-        {
-            mCamera.setPreviewDisplay(mHolder);
-            mCamera.startPreview();
+	@Override
+	public void surfaceDestroyed(SurfaceHolder arg0) {
+		// TODO Auto-generated method stub
 
-        } catch(Exception e)
-        {
-            Log.d("SMU", "Error starting camera preview: " + e.getMessage());
-        }
-    }
+	}
 }

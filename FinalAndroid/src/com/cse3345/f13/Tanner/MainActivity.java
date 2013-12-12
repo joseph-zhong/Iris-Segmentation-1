@@ -8,9 +8,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -28,7 +26,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,13 +36,12 @@ public class MainActivity extends Activity {
 	private FrameLayout cameraPreview;
 	private TextView selectedCameraStatus;
 	private MenuItem menuFront;
-	private boolean frontFlag;
-	private boolean left;
+
+	private boolean frontFlag, left;
 	private int currCamera = -1, tempCamera;
-	private String subjectID = "IMG", mostRecentImageDir = null,
+	private String subjectID = "ID", mostRecentImageDir = null,
 			mostRecentImageName, mostRecentTimeStamp;
 	private byte[] toPass;
-	final private int segActivityInt = 0;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -53,7 +49,6 @@ public class MainActivity extends Activity {
 
 		selectedCameraStatus = (TextView) findViewById(R.id.Camera);
 		left = true;
-		// cameraChoice = (RadioGroup) findViewById(R.id.CameraSelection);
 		cameraPreview = (FrameLayout) findViewById(R.id.surfaceView);
 
 		makeCameraList();
@@ -66,67 +61,8 @@ public class MainActivity extends Activity {
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// menu selection
-		switch (item.getItemId()) {
-		case R.id.menu_select_camera:
-			return true;
-		case R.id.menu_back_camera:
-			menuCameraSelection(0);
-			return true;
-		case R.id.menu_front_camera:
-			menuCameraSelection(1);
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
-		}
-	}
-
-	@Override
-	protected void onActivityResult(int req, int result, Intent data) {
-		super.onActivityResult(req, result, data);
-		switch (req) {
-		case segActivityInt:
-			left = data.getBooleanExtra("leftEye", true);
-			mostRecentImageName = data.getStringExtra("fileName");
-			subjectID = data.getStringExtra("subjectID");
-			// update the textView for subjectID
-			if (data.getBooleanExtra("save", false))
-				saveToPhone();
-			return;
-		default:
-			return;
-		}
-	}
-
-	@Override
 	public void onDestroy() {
 		super.onDestroy();
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu
-		try {
-			getMenuInflater().inflate(R.menu.main, menu);
-		} catch (Exception e) {
-			Log.e("TAG", "Error inflating menu");
-			e.printStackTrace();
-		}
-		return true;
-	}
-
-	@Override
-	public boolean onPrepareOptionsMenu(Menu menu) {
-		// add the front camera as a menu option
-		menuFront = (MenuItem) menu.findItem(R.id.menu_front_camera);
-
-		if (!frontFlag)
-			menuFront.setVisible(false);
-		else
-			menuFront.setVisible(true);
-
-		return super.onPrepareOptionsMenu(menu);
 	}
 
 	@Override
@@ -143,50 +79,6 @@ public class MainActivity extends Activity {
 		super.onResume();
 		setCamera(tempCamera);
 		setSelectedCameraStatus();
-	}
-
-	public void setSelectedCameraStatus() {
-		if (currCamera == 0)
-			selectedCameraStatus.setText(R.string.back_camera);
-		else if (currCamera == 1)
-			selectedCameraStatus.setText(R.string.front_camera);
-	}
-
-	public void makeToast(Context context, String msg, int duration) {
-		Toast.makeText(context, msg, duration).show();
-	}
-
-	public void setCamera(int i) {
-		if (i == currCamera)
-			return;
-
-		// release camera
-		releaseCamera();
-
-		// set currentlyDesplayedCamera
-		currCamera = i;
-		// reset camera
-		// clear all views from the Frame Layout
-		if (cameraPreview.getChildCount() > 0)
-			cameraPreview.removeAllViews();
-
-		camera = getCamera(i);
-
-		Camera.Parameters params = camera.getParameters();
-
-		if (camera.getParameters().isZoomSupported())
-			params.setZoom(camera.getParameters().getMaxZoom() / 4);
-
-		camera.setParameters(params);
-
-		// set preview
-		mPreview = new CameraPreview(this, camera);
-
-		// add the view
-		cameraPreview.addView(mPreview);
-		// start the preview on the camera for fun.
-		camera.startPreview();
-
 	}
 
 	@Override
@@ -206,14 +98,39 @@ public class MainActivity extends Activity {
 		}
 	}
 
-	private void saveToPhone() {
-		sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED,
-				Uri.parse("file://" + mostRecentImageDir)));
+	public void makeToast(Context context, String msg, int duration) {
+		Toast.makeText(context, msg, duration).show();
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu
+		try {
+			getMenuInflater().inflate(R.menu.main, menu);
+		} catch (Exception e) {
+			Log.e("TAG", "Error inflating menu");
+			e.printStackTrace();
+		}
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// menu selection
+		switch (item.getItemId()) {
+		case R.id.menu_back_camera:
+			menuCameraSelection(0);
+			return true;
+		case R.id.menu_front_camera:
+			menuCameraSelection(1);
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
 	}
 
 	// make list of cameras
 	public void makeCameraList() {
-		// get the cameras
 		int numOfCams = Camera.getNumberOfCameras();
 
 		if (numOfCams == 1)
@@ -222,12 +139,142 @@ public class MainActivity extends Activity {
 			frontFlag = true;
 	}
 
-	// set which camera based on menu
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		// add the front camera as a menu option
+		menuFront = (MenuItem) menu.findItem(R.id.menu_front_camera);
+
+		if (!frontFlag)
+			menuFront.setVisible(false);
+		else
+			menuFront.setVisible(true);
+
+		return super.onPrepareOptionsMenu(menu);
+	}
+
+	public void setSelectedCameraStatus() {
+		if (currCamera == 0)
+			selectedCameraStatus.setText(R.string.back_camera);
+		else if (currCamera == 1)
+			selectedCameraStatus.setText(R.string.front_camera);
+	}
+
+	public void setCamera(int i) {
+		if (i == currCamera)
+			return;
+
+		// release camera
+		releaseCamera();
+
+		// set which camera is displayed
+		currCamera = i;
+		// clear all views from the Frame Layout
+		if (cameraPreview.getChildCount() > 0)
+			cameraPreview.removeAllViews();
+
+		camera = getCamera(i);
+
+		Camera.Parameters params = camera.getParameters();
+
+		if (camera.getParameters().isZoomSupported())
+			params.setZoom(camera.getParameters().getMaxZoom() / 4);
+
+		camera.setParameters(params);
+
+		// set preview
+		mPreview = new CameraPreview(this, camera);
+
+		// add the view
+		cameraPreview.addView(mPreview);
+		camera.startPreview();
+
+	}
+
+	@Override
+	protected void onActivityResult(int req, int result, Intent data) {
+		super.onActivityResult(req, result, data);
+		left = data.getBooleanExtra("leftEye", true);
+		mostRecentImageName = data.getStringExtra("fileName");
+		subjectID = data.getStringExtra("subjectID");
+		// update the textView for subjectID
+		if (data.getBooleanExtra("save", false))
+			saveToPhone();
+		return;
+	}
+
+	private void saveToPhone() {
+		sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED,
+				Uri.parse("file://" + mostRecentImageDir)));
+	}
+
 	public void menuCameraSelection(int i) {
 		// set camera
 		setCamera(i);
-		// change status text
+		// show which camera is selected
 		setSelectedCameraStatus();
+	}
+
+	// take the picture
+	public void takePicture(View view) {
+		camera.takePicture(null, null, mPicture);
+
+		camera.startPreview();
+
+	}
+
+	// open camera
+	public Camera getCamera(int i) {
+		Camera cam = null;
+		try {
+			cam = Camera.open(i);
+			cam.setDisplayOrientation(90);
+		} catch (Exception e) {
+		}
+		return cam;
+	}
+
+	// start the next activity
+	public void beginSegmentActivity() {
+		Intent intent = new Intent(getBaseContext(), SegmentActivity.class);
+		// put the variables needed in the next activity in an intent
+		intent.putExtra("subjectID", subjectID);
+		intent.putExtra("fileDir", mostRecentImageDir);
+		intent.putExtra("fileName", mostRecentImageName);
+		intent.putExtra("leftEye", left);
+		intent.putExtra("timeStamp", mostRecentTimeStamp);
+		intent.putExtra("toPass", toPass);
+		intent.putExtra("save", false);
+		startActivityForResult(intent, 0);
+
+	}
+
+	public File getOutputMediaFile() {
+		// make sure subjectID is up to date with the tempString
+		File mediaStorageDir = new File(
+				Environment
+						.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
+				"Captured_Images");
+		if (!mediaStorageDir.exists()) {
+			if (!mediaStorageDir.mkdirs()) {
+				Log.d("TAG", "failed to create directory");
+				return null;
+			}
+		}
+		// Create a media file name
+		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US)
+				.format(new Date());
+
+		File mediaFile;
+
+		mediaFile = new File(mediaStorageDir.toString(), subjectID + "_"
+				+ timeStamp + ".jpg");
+
+		// store the path as a string
+		mostRecentImageDir = mediaStorageDir.toString() + "/";
+		mostRecentImageName = subjectID + "_" + timeStamp + ".jpg";
+		mostRecentTimeStamp = timeStamp;
+
+		return mediaFile;
 	}
 
 	// This function was not created by me. I found it on stackoverflow here:
@@ -253,26 +300,6 @@ public class MainActivity extends Activity {
 		paint.setColorFilter(filter);
 		canvas.drawBitmap(original, 0, 0, paint);
 		return grayscale;
-	}
-
-	// onclick method for capturing an image
-	public void takePicture(View view) {
-		camera.takePicture(null, null, mPicture);
-
-		camera.startPreview();
-
-	}
-
-	// open a camera
-	public Camera getCamera(int i) {
-		Camera cam = null;
-		try {
-			cam = Camera.open(i);
-			cam.setDisplayOrientation(90);
-		} catch (Exception e) {
-		}
-
-		return cam;
 	}
 
 	PictureCallback mPicture = new PictureCallback() {
@@ -330,75 +357,4 @@ public class MainActivity extends Activity {
 			beginSegmentActivity();
 		}
 	};
-
-	// start the next activity
-	public void beginSegmentActivity() {
-		// start the segActivity for confirming save and segmentation
-		Intent intent = new Intent(getBaseContext(), SegmentActivity.class);
-		intent.putExtra("subjectID", subjectID);
-		intent.putExtra("fileDir", mostRecentImageDir); // directory the image
-														// will be put in
-		intent.putExtra("fileName", mostRecentImageName); // name of the image
-		intent.putExtra("leftEye", left); // boolean for whether the image is
-											// the left eye or not
-		intent.putExtra("timeStamp", mostRecentTimeStamp); // the timestamp
-		intent.putExtra("toPass", toPass); // the byte array to be used for
-											// segmentation
-		intent.putExtra("save", false);
-		startActivityForResult(intent, 0);
-
-	}
-
-	public File getOutputMediaFile() {
-		// make sure subjectID is up to date with the tempString
-		File mediaStorageDir = new File(
-				Environment
-						.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
-				"Captured_Images");
-		if (!mediaStorageDir.exists()) {
-			if (!mediaStorageDir.mkdirs()) {
-				Log.d("TAG", "failed to create directory");
-				return null;
-			}
-		}
-		// Create a media file name
-		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US)
-				.format(new Date());
-
-		File mediaFile;
-
-		mediaFile = new File(mediaStorageDir.toString(), subjectID + "_"
-				+ timeStamp + ".jpg");
-
-		// store the string of the path
-		mostRecentImageDir = mediaStorageDir.toString() + "/";
-		mostRecentImageName = subjectID + "_" + timeStamp + ".jpg";
-		mostRecentTimeStamp = timeStamp;
-
-		return mediaFile;
-	}
-
-	// displays an error messege in a dialog
-	// params are: Context,String title, String error msg, String button msg
-	public void displayErrorDialog(Context cont, String t, String e, String b) {
-		// display error dialog
-		AlertDialog alertDialog = new AlertDialog.Builder(cont).create();
-		// Setting Dialog Title
-		alertDialog.setTitle(t);
-		// Setting Dialog Message
-		alertDialog.setMessage(e);
-		// Setting Icon to Dialog
-		alertDialog.setIcon(R.drawable.ic_launcher);
-		// Setting OK Button
-		alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, b,
-				new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						dialog.dismiss();
-					}
-				});
-
-		// Showing Alert Message
-		alertDialog.show();
-	}
 }

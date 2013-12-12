@@ -50,15 +50,22 @@ public final class R {
     }
     public static final class string {
         public static final int app_name=0x7f050000;
-        public static final int back_camera=0x7f050002;
-        public static final int blank_string=0x7f050001;
-        public static final int external_camera=0x7f050006;
-        public static final int front_camera=0x7f050003;
-        public static final int menu_quit=0x7f050004;
-        public static final int menu_select_camera=0x7f050005;
-        public static final int menu_subject_id=0x7f050008;
-        public static final int myName=0x7f050009;
-        public static final int no_camera=0x7f050007;
+        public static final int back_camera=0x7f050001;
+        public static final int delete_image=0x7f05000d;
+        public static final int external_camera=0x7f050005;
+        public static final int front_camera=0x7f050002;
+        public static final int image_name=0x7f05000b;
+        public static final int left_eye=0x7f05000e;
+        public static final int menu_quit=0x7f050003;
+        public static final int menu_select_camera=0x7f050004;
+        public static final int menu_subject_id=0x7f050007;
+        public static final int myName=0x7f050008;
+        public static final int no_camera=0x7f050006;
+        public static final int right_eye=0x7f05000f;
+        public static final int save_image=0x7f05000c;
+        public static final int set_id=0x7f05000a;
+        public static final int subject_id=0x7f050009;
+        public static final int take_picture=0x7f050010;
     }
     public static final class style {
         /** 

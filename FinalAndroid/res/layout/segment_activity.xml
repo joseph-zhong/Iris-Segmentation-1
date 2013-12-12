@@ -16,7 +16,7 @@
         android:layout_height="50dp"
         android:layout_toLeftOf="@+id/ID_editText"
         android:gravity="center_vertical"
-        android:text="Subject ID: "
+        android:text="@string/subject_id"
         android:textColor="@android:color/white"
         android:textSize="20sp" />
 
@@ -27,7 +27,7 @@
         android:layout_centerHorizontal="true"
         android:gravity="center_vertical"
         android:inputType="number"
-        android:text="ID#HERE"
+        android:text="@string/set_id"
         android:textSize="20sp" />
 
     <ImageView
@@ -43,22 +43,21 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/Preview"
         android:gravity="center_horizontal"
-        android:text="Captured Image: "
+        android:text="@string/image_name"
         android:textColor="@android:color/white"
-        android:textSize="20dp"
+        android:textSize="20sp"
         android:textStyle="bold" />
 
     <Button
         android:id="@+id/Save_Button"
         android:layout_width="75dp"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/surfaceView"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="15dp"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:onClick="saveButton"
-        android:text="Save" />
+        android:text="@string/save_image" />
 
     <Button
         android:id="@+id/Discard_Button"
@@ -70,7 +69,7 @@
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:onClick="confirmDiscard"
-        android:text="Discard" />
+        android:text="@string/delete_image" />
 
     <RadioGroup
         android:id="@id/EyeSelection"
@@ -92,7 +91,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="radioGroupEyeSelection"
-            android:text="Left Eye" />
+            android:text="@string/left_eye" />
 
         <RadioButton
             android:id="@+id/radioRight"
@@ -100,7 +99,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:onClick="radioGroupEyeSelection"
-            android:text="Right Eye" />
+            android:text="@string/right_eye" />
     </RadioGroup>
 
 </RelativeLayout>

@@ -27,9 +27,8 @@ import android.widget.Toast;
 
 public class SegmentActivity extends Activity {
 	private String currId, currFileName, sourceDir, sourceFileName, timestamp,
-			eye, newDir;
-
-	private String sourceSegDir, sourceSegFilename, newSegDir, newSegFilename;
+			eye, newDir, sourceSegDir, sourceSegFilename, newSegDir,
+			newSegFilename;
 
 	private TextView idTextView, previewLabelTextView;
 	private EditText idEditText;
@@ -41,7 +40,6 @@ public class SegmentActivity extends Activity {
 	private boolean left, discard = false;
 	private Bitmap capturedImage, segmentedImage;
 	public byte[] imgBytes;
-	boolean save = false;
 
 	public void onCreate(Bundle savedInstanceState) {
 
@@ -59,16 +57,17 @@ public class SegmentActivity extends Activity {
 		saveButton = (Button) findViewById(R.id.Save_Button);
 		sourceIntent = getIntent();
 
-		// set the strings for the image
+		// set variables from intent
 		currId = sourceIntent.getStringExtra("subjectID");
 		currFileName = sourceIntent.getStringExtra("fileName");
 		sourceFileName = currFileName;
+
 		sourceDir = sourceIntent.getStringExtra("fileDir");
 		timestamp = sourceIntent.getStringExtra("timeStamp");
 		eye = "_L_";
+
 		imgBytes = sourceIntent.getByteArrayExtra("toPass");
 
-		// set other vairiables from the passed intent
 		left = sourceIntent.getBooleanExtra("leftEye", true);
 
 		// initilize the values in the textViews to the passed values
@@ -82,7 +81,7 @@ public class SegmentActivity extends Activity {
 		// start segmentation
 		new segment().execute(sourceDir, sourceFileName);
 
-		// display the captured image
+		// display the image
 		capturedImage = BitmapFactory.decodeFile(sourceDir + currFileName);
 		image.setImageBitmap(capturedImage);
 
@@ -93,7 +92,7 @@ public class SegmentActivity extends Activity {
 				// set the value of subject ID
 				currId = s.toString();
 
-				// update the string displayed on the screen
+				// update the string shown
 				updateFilename();
 			}
 
@@ -107,7 +106,7 @@ public class SegmentActivity extends Activity {
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before,
 					int count) {
-				// unused in this method
+				// unused
 
 			}
 		});
@@ -175,7 +174,7 @@ public class SegmentActivity extends Activity {
 		newSegFilename = "SEG_" + currId + eye + timestamp;
 
 		// update the textView
-		previewLabelTextView.setText("Captured Image:\n" + currFileName);
+		previewLabelTextView.setText("Image Name:\n" + currFileName);
 
 		return;
 	}
@@ -219,9 +218,6 @@ public class SegmentActivity extends Activity {
 					Toast.LENGTH_LONG);
 		}
 
-		// update the directory path
-		// getNewSegDir();
-
 		// rename segmented image
 		try {
 			File oldSegFile = new File(sourceSegDir + sourceSegFilename);
@@ -248,7 +244,7 @@ public class SegmentActivity extends Activity {
 		finish();
 	}
 
-	// onClick for the discard button
+	// onClick for the delete button
 	public void discardButton(View view) {
 		discard = true;
 
@@ -283,8 +279,7 @@ public class SegmentActivity extends Activity {
 		finish();
 	}
 
-	// confimration pop-up for discarding an image
-	// prompts the user for a string and sets subjectID
+	// confimration pop-up for deleting an image
 	public void confirmDiscard(final View view) {
 		AlertDialog.Builder alert = new AlertDialog.Builder(this);
 
@@ -314,7 +309,7 @@ public class SegmentActivity extends Activity {
 			saveButton.setEnabled(true);
 
 			// changes the image displayed from the captured image to the
-			// segmented
+			// segmented one
 			storeImage();
 
 			segmentedImage = BitmapFactory.decodeFile(sourceDir

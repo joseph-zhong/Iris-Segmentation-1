@@ -3,7 +3,7 @@ package com.cse3345.f13.Tanner;
 
 public class JNI {
 
-	public native void Segment(String fileName, String path, Eye stats, byte[] passed);
+	public native void Segment(String fileName, String path, byte[] passed);
 
 	static {
 		System.loadLibrary("AndroidSegmentor");

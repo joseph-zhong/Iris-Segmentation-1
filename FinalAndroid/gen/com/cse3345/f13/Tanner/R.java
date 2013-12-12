@@ -24,25 +24,22 @@ public final class R {
         public static final int ic_launcher=0x7f020000;
     }
     public static final class id {
-        public static final int CameraSelectionStatus=0x7f080001;
-        public static final int CaptureImage=0x7f080003;
-        public static final int Discard_Button=0x7f08000a;
-        public static final int EyeSelection=0x7f080007;
-        public static final int Preview=0x7f080006;
-        public static final int Preview_Label=0x7f080008;
-        public static final int Save_Button=0x7f080009;
-        public static final int SubjectID=0x7f080000;
-        public static final int Subject_ID=0x7f080004;
-        public static final int menu_back_camera=0x7f08000f;
-        public static final int menu_front_camera=0x7f080010;
-        public static final int menu_quit=0x7f080012;
-        public static final int menu_select_camera=0x7f08000d;
-        public static final int menu_set_subject_id=0x7f080011;
-        public static final int radioLeft=0x7f08000b;
-        public static final int radioRight=0x7f08000c;
-        public static final int subject_ID_editText=0x7f080005;
-        public static final int submenu_sub=0x7f08000e;
-        public static final int surfaceView=0x7f080002;
+        public static final int Camera=0x7f080000;
+        public static final int Discard_Button=0x7f080009;
+        public static final int EyeSelection=0x7f080006;
+        public static final int ID_editText=0x7f080004;
+        public static final int Preview=0x7f080005;
+        public static final int Preview_Label=0x7f080007;
+        public static final int Save_Button=0x7f080008;
+        public static final int Subject_ID=0x7f080003;
+        public static final int TakePicture=0x7f080002;
+        public static final int menu_back_camera=0x7f08000e;
+        public static final int menu_front_camera=0x7f08000f;
+        public static final int menu_select_camera=0x7f08000c;
+        public static final int radioLeft=0x7f08000a;
+        public static final int radioRight=0x7f08000b;
+        public static final int submenu_sub=0x7f08000d;
+        public static final int surfaceView=0x7f080001;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;

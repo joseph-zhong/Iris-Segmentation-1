@@ -5,30 +5,15 @@
     android:background="#FF183C51" >
 
     <TextView
-        android:id="@+id/SubjectID"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:layout_marginBottom="5dp"
-        android:layout_marginTop="5dp"
-        android:text="Subject: IMG"
-        android:textColor="@android:color/white"
-        android:textSize="20sp" />
-
-    <TextView
-        android:id="@+id/CameraSelectionStatus"
+        android:id="@+id/Camera"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
+        android:layout_marginBottom="5dp"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
-        android:layout_marginBottom="5dp"
         android:layout_marginTop="5dp"
-        android:text="Which Camera"
         android:textColor="@android:color/white"
         android:textSize="20sp" />
 
@@ -41,18 +26,18 @@
         android:background="@android:color/darker_gray" />
 
     <Button
-        android:id="@+id/CaptureImage"
+        android:id="@+id/TakePicture"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="5dp"
         android:layout_marginTop="5dp"
-        android:onClick="captureImage"
+        android:onClick="takePicture"
+        android:paddingBottom="15dp"
         android:paddingLeft="30dp"
         android:paddingRight="30dp"
         android:paddingTop="15dp"
-        android:paddingBottom="15dp"
         android:text="Take Picture" />
 
 </RelativeLayout>

@@ -19,15 +19,15 @@
 
 using namespace std;
 
+//I talked before in the SegmentActivity about what the hough transform does
+// but here is where it is implemented and returns the center point of the eye
 pair<int, int> HoughTransform(double directional[480][640], Image *mask,
-		Image *Hough, int gridSize, int minR, int maxR)
-{
+		Image *Hough, int gridSize, int minR, int maxR) {
 
 	int pixelVal;
 	int** center = new int*[480];
 	center[0] = new int[480 * 640];
-	for (int i = 1; i < 480; i++)
-	{
+	for (int i = 1; i < 480; i++) {
 		center[i] = center[i - 1] + 640;
 	}
 	int max = 0;
@@ -42,44 +42,35 @@ pair<int, int> HoughTransform(double directional[480][640], Image *mask,
 	double cosDirection;
 	pair<int, int> coor = make_pair(0, 0);
 
-	for (int i = 0; i < 480; i++)
-	{
-		for (int j = 0; j < 640; j++)
-		{
+	for (int i = 0; i < 480; i++) {
+		for (int j = 0; j < 640; j++) {
 			center[i][j] = 0;
 		}
 	}
 
-	for (int i = gridSize; i < mask->getNumRows() - gridSize; i++)
-	{
+	for (int i = gridSize; i < mask->getNumRows() - gridSize; i++) {
 		tempRow = i;
-		for (int j = gridSize; j < mask->getNumColumns() - gridSize; j++)
-		{
+		for (int j = gridSize; j < mask->getNumColumns() - gridSize; j++) {
 			tempCol = j;
 
 			pixelVal = mask->getPixelElement(i, j);
-			if (pixelVal > 0)
-			{
+			if (pixelVal > 0) {
 				sinDirection = sin(directional[i][j]);
 				cosDirection = cos(directional[i][j]);
-				for (int k = minR; k < maxR; k++)
-				{
+				for (int k = minR; k < maxR; k++) {
 					a = k * sinDirection;
 					b = k * cosDirection;
 					tempRow -= b;
 					tempCol += a;
 
 					if (tempCol < 640 - gridSize && tempRow < 480 - gridSize
-							&& tempRow > gridSize && tempCol > gridSize)
-					{
+							&& tempRow > gridSize && tempCol > gridSize) {
 						center[tempRow][tempCol]++;
-						if (center[tempRow][tempCol] > max)
-						{
+						if (center[tempRow][tempCol] > max) {
 							max = center[tempRow][tempCol];
 							coor = make_pair(tempRow, tempCol);
 						}
-						if (Hough->getPixelElement(tempRow, tempCol) < 255)
-						{
+						if (Hough->getPixelElement(tempRow, tempCol) < 255) {
 							tempPlus = Hough->getPixelElement(tempRow, tempCol)
 									+ 1;
 							Hough->setPixelElement(tempRow, tempCol, tempPlus);
@@ -99,13 +90,13 @@ pair<int, int> HoughTransform(double directional[480][640], Image *mask,
 
 }
 
+//this makes a mask of the image which basically sets anything above
+// a threshold to white and anything below it to black to create a
+// contrasted image
 void makeMask(Image *medianImage, Image *mask, Image *gradient,
-		double (&gradientArr)[480][640], int max, int maskThreshold)
-{
-	for (int i = medianImage->getNumRows() - 1; i > 1; i--)
-	{
-		for (int j = medianImage->getNumColumns() - 1; j > 1; j--)
-		{
+		double (&gradientArr)[480][640], int max, int maskThreshold) {
+	for (int i = medianImage->getNumRows() - 1; i > 1; i--) {
+		for (int j = medianImage->getNumColumns() - 1; j > 1; j--) {
 
 			gradientArr[i][j] /= max;
 			gradientArr[i][j] *= 255;
@@ -123,19 +114,16 @@ void makeMask(Image *medianImage, Image *mask, Image *gradient,
 }
 
 int sobel(Image *medianImage, double (&directional)[480][640],
-		double (&gradientArr)[480][640])
-{
+		double (&gradientArr)[480][640]) {
 	int max = 0;
 	int sobelVSum = 0;
 	int sobelHSum = 0;
 	int gradientDouble = 0;
 	double direct = 0;
-	for (int i = 1; i < medianImage->getNumRows() - 1; i++)
-	{
+	for (int i = 1; i < medianImage->getNumRows() - 1; i++) {
 		int topI = i - 1;
 		int botI = i + 1;
-		for (int j = 1; j < medianImage->getNumColumns() - 1; j++)
-		{
+		for (int j = 1; j < medianImage->getNumColumns() - 1; j++) {
 			int leftJ = j - 1;
 			int rightJ = j + 1;
 
@@ -175,69 +163,23 @@ int sobel(Image *medianImage, double (&directional)[480][640],
 	return max;
 }
 
-void houghSmooth(Image *tempHough, Image *Hough, float (&mexhatsmall)[5][5],
-		float (&mexhatlarge)[17][17], bool LorS)
-{
-	for (int i = 100; i < Hough->getNumRows() - 100; i++)
-	{
-		for (int j = 150; j < Hough->getNumColumns() - 150; j++)
-		{
-			int total = 0;
-			if (LorS)
-			{
-				for (int k = 0; k < 17; k++)
-				{
-					for (int l = 0; l < 17; l++)
-					{
-						total += mexhatlarge[k][l]
-								* Hough->getPixelElement((i - k), (j - l));
-					}
-				}
-			} else
-			{
-				for (int k = 0; k < 5; k++)
-				{
-					for (int l = 0; l < 5; l++)
-					{
-						total += mexhatsmall[k][l]
-								* Hough->getPixelElement((i - k), (j - l));
-					}
-				}
-			}
-			if (total < 0)
-			{
-				total = 0;
-				tempHough->setPixelElement(i, j, total);
-			} else if (total < 255)
-				tempHough->setPixelElement(i, j, total);
-			else
-				tempHough->setPixelElement(i, j, 255);
-
-		}
-
-	}
-}
-
+//this finds the best fit radius to find the best fit circle to match an edge
 int findRad(int minRadDraw, int maxRadDraw, pair<int, int> centerCoor,
-		Image *mask)
-{
+		Image *mask) {
 	int y;
 	int row;
 	int column;
 	int maxCount = 0;
 	int radius = 0;
-	for (int j = minRadDraw; j < maxRadDraw; j++)
-	{
+	for (int j = minRadDraw; j < maxRadDraw; j++) {
 		int testRadius = j;
 		int count = 0;
-		for (int i = 0; i < testRadius; i++)
-		{
+		for (int i = 0; i < testRadius; i++) {
 			y = sqrt(
 					(pow((double) testRadius, (double) 2))
 							- pow((double) i, (double) 2));
 
-			if (i < (testRadius * .4))
-			{
+			if (i < (testRadius * .4)) {
 				row = centerCoor.first + i;
 				column = centerCoor.second + y;
 				if (row < 480 && column < 640 && row > 0 && column > 0)
@@ -263,8 +205,7 @@ int findRad(int minRadDraw, int maxRadDraw, pair<int, int> centerCoor,
 						count++;
 			}
 
-			if (y < (testRadius * .4))
-			{
+			if (y < (testRadius * .4)) {
 				row = centerCoor.first + y;
 				column = centerCoor.second + i;
 				if (row < 480 && column < 640 && row > 0 && column > 0)
@@ -291,8 +232,7 @@ int findRad(int minRadDraw, int maxRadDraw, pair<int, int> centerCoor,
 			}
 
 		}
-		if (count > maxCount)
-		{
+		if (count > maxCount) {
 			maxCount = count;
 			radius = testRadius;
 		}
@@ -303,15 +243,14 @@ int findRad(int minRadDraw, int maxRadDraw, pair<int, int> centerCoor,
 		return radius;
 }
 
-void printCircle(pair<int, int> centerCoor, Image *images, int radius)
-{
+//this is just for the users viewing and isnt really needed if the algorithm were to be used for recognition
+void printCircle(pair<int, int> centerCoor, Image *images, int radius) {
 	int y;
 	int row;
 	int column;
 	if (radius == 0)
 		return;
-	for (int i = 0; i < radius; i++)
-	{
+	for (int i = 0; i < radius; i++) {
 		y = sqrt(
 				(pow((double) radius, (double) 2))
 						- pow((double) i, (double) 2));
@@ -359,129 +298,18 @@ void printCircle(pair<int, int> centerCoor, Image *images, int radius)
 	}
 }
 
-void unwrap(int radLow, int radHigh, pair<int, int> centerCoor,
-		Image *unwrapped, Image *images)
-{
-
-	double y = 0;
-	double x = 0;
-	double angle = 6.28 / 180;
-	double tempAngle = 0;
-	double radInc = ((double) radHigh - (double) radLow) / 96.0;
-	double tempRad = 0;
-
-	for (int i = 0; i < 180; i++)
-	{
-		for (int j = 0; j < 96; j++)
-		{
-			tempRad = radInc * j + radLow;
-			tempAngle = angle * i;
-			x = tempRad * sin(tempAngle) + centerCoor.second;
-			y = tempRad * cos(tempAngle) + centerCoor.first;
-			if (y < 480 && x < 640 && y > 0 && x > 0)
-				unwrapped->setPixelElement(j, i, images->getPixelElement(y, x));
-		}
-	}
-
-}
-
-void Haar(Image *unwrap, Image *Template, Image *maskTemplate,
-		int (&haar)[8][8])
-{
-
-//CLAHE
-	float clipLimit = 5.8f;
-	unsigned int xResolution = 180;
-	unsigned int yResolution = 96;
-	int numRegionsInXDirection = xResolution / 20;
-	int numRegionsInYDirection = yResolution / 20;
-
-	if (numRegionsInXDirection > 20)
-		numRegionsInXDirection = 20;
-	if (numRegionsInYDirection > 20)
-		numRegionsInYDirection = 20;
-
-	int errors = CLAHE(*unwrap->getData(), xResolution, yResolution, 0, 255,
-			numRegionsInXDirection, numRegionsInYDirection, 256, clipLimit);
-
-	double tempSum = 0;
-	double oneSqrt2 = 1 / sqrt((double) 2);
-	int setZero = 0;
-	int tempRow = 0;
-	int tempCol = 0;
-	for (int i = 0; i < 96; i++)
-	{
-		for (int j = 0; j < 180; j++)
-		{
-			tempSum = 0;
-			for (int k = -4; k <= 3; k++)
-			{
-				for (int l = -4; l <= 3; l++)
-				{
-					setZero = 0;
-					if (i + k < 0 || i + k > 95)
-						continue;
-					else
-					{
-						tempRow = i + k;
-						if (j + l < 0)
-							tempCol = 180 + (j + l);
-						else if (j + l > 179)
-							tempCol = 0 - (180 - (j + l));
-						else
-							tempCol = j + l;
-						tempSum += haar[k + 4][l + 4]
-								* unwrap->getPixelElement(tempRow, tempCol);
-					}
-				}
-			}
-			tempSum *= oneSqrt2;
-			tempSum = tempSum / 64;
-			if (tempSum > 0)
-				Template->setPixelElement(i, j, 255);
-			else
-				Template->setPixelElement(i, j, 0);
-
-			if (tempSum > 1 || tempSum < -1)
-				maskTemplate->setPixelElement(i, j, 255);
-			else
-				maskTemplate->setPixelElement(i, j, 0);
-		}
-	}
-
-}
-
+//Here is the function actually called from Java that runs everytthing in C++
 extern "C" JNIEXPORT void JNICALL Java_com_cse3345_f13_Tanner_JNI_Segment(
 		JNIEnv *env, jobject obj, jstring jfileName, jstring jpath,
-		jobject jstats, jbyteArray passed)
-{
-	clock_t start;
+		jbyteArray passed) {
 
 	int lenJArr = env->GetArrayLength(passed);
 	unsigned char* toBMP = new unsigned char[lenJArr];
 	env->GetByteArrayRegion(passed, 0, lenJArr,
 			reinterpret_cast<jbyte*>(toBMP));
 
-
 	Image* makeBMP = new Image();
 	int pos = 0;
-	__android_log_print(ANDROID_LOG_ERROR, "MyProject",
-			"pre setting toBMP");
-
-
-
-/*
-	for (int i = 0; i < 480; i++)
-	{
-		for (int j = 0; j < 640; j++)
-		{
-			makeBMP->setPixelElement(i,j,toBMP[pos]);
-			pos++;
-		}
-	}
-	*/
-	__android_log_print(ANDROID_LOG_ERROR, "MyProject",
-			"post setting toBMP");
 
 	string fileName = env->GetStringUTFChars(jfileName, 0);
 	string newFileName = env->GetStringUTFChars(jfileName, 0);
@@ -489,64 +317,24 @@ extern "C" JNIEXPORT void JNICALL Java_com_cse3345_f13_Tanner_JNI_Segment(
 	fileName.append(".bmp");
 	newFileName.append("_Segmented.bmp");
 
-
-
 	string path = env->GetStringUTFChars(jpath, 0);
-
-	jclass EyeStats = env->GetObjectClass(jstats);
-
-	jmethodID setStats = env->GetMethodID(EyeStats, "setStats", "(DDII)V");
-
-
-
-	__android_log_print(ANDROID_LOG_ERROR, "MyProject",
-			"pre setting up bmp");
-
-
-
-
-	//ofstream output;
-	//output.open((path + fileName).c_str());
 
 	__android_log_print(ANDROID_LOG_ERROR, "MyProject",
 			(path + fileName).c_str());
 
-	Image tempTest = new Image(480,640,toBMP);
+	Image tempTest = new Image(480, 640, toBMP);
 	tempTest.writeBMP(fileName, path);
 
-	//for(int i= 0; i < lenJArr; i++){
-		//if(i % 7 == 0)
-		//	output << toBMP[i] << endl;
-	//	output << toBMP[i];
-	//}
-//
-	//output.close();
-
-	__android_log_print(ANDROID_LOG_ERROR, "MyProject",
-			"pre read bmp");
+	__android_log_print(ANDROID_LOG_ERROR, "MyProject", "pre read bmp");
 
 	makeBMP->readBMP(fileName, path);
 
-	__android_log_print(ANDROID_LOG_ERROR, "MyProject",
-			"post read bmp");
-
-	//makeBMP->writeBMP(fileName, path);
-
-
-
-	//makeBMP->writeBMP(fileName, path);
-
-	__android_log_print(ANDROID_LOG_ERROR, "MyProject",
-			"post writing bmp");
+	__android_log_print(ANDROID_LOG_ERROR, "MyProject", "post read bmp");
 
 	double pupil;
 	double Limbic;
 	int X;
 	int Y;
-
-	//__android_log_print(ANDROID_LOG_ERROR, "MyProject", "test");
-
-	double clocks = (double) CLOCKS_PER_SEC;
 
 	int radius = 0;
 	int LimbicRadius = 0;
@@ -575,7 +363,6 @@ extern "C" JNIEXPORT void JNICALL Java_com_cse3345_f13_Tanner_JNI_Segment(
 	int minLimbRadDraw = 90;
 	int maxLimbRadDraw = 170;
 
-	//bool maskRetried = false;
 	bool maskRetried = false;
 	/*
 	 *
@@ -583,57 +370,21 @@ extern "C" JNIEXPORT void JNICALL Java_com_cse3345_f13_Tanner_JNI_Segment(
 	 *
 	 *
 	 */
-	int imageRuns = 3000;
-	bool print = false;
-	bool printImages = true;
 
-	/*
-	 *
-	 *
-	 *
-	 *
-	 *
-	 *
-	 *
-	 */
-
-	double progress;
-
-	Image *templates[imageRuns];
-	Image *masks[imageRuns];
-
-	string buffer;
-
-	string eyes[imageRuns];
-	string subjects[imageRuns];
-	string fileNames[imageRuns];
-
-	int falseCount = 0;
-	int genCount = 0;
-
-	double meanFalse = 0;
-	double meanGen = 0;
-
-	int falseCountTotal;
-	int genCountTotal;
-
-	double meanFalseTotal;
-	double meanGenTotal;
-
+	//create all the images that will be needed
+	//NOTE the image class was another thing I did not write. it is some code for
+	//handling BMPs written by someone I work with and only really used for small
+	//projects like this
 	Image *images = new Image(480, 640);
 	Image *medianImage = new Image(480, 640);
 	Image *gradient = new Image(480, 640);
 	Image *mask = new Image(480, 640);
 	Image *Hough = new Image(480, 640);
-	Image *tempHough = new Image(480, 640);
 
 	Image *maskRetry1 = new Image(480, 640);
 	Image *maskRetry2 = new Image(480, 640);
 
-	Image *unwrapped = new Image(96, 180);
-	Image *Template = new Image(96, 180);
-	Image *maskTemplate = new Image(96, 180);
-
+	//Haar filter kernel
 	int haar[8][8] = { { -1, -1, -1, -1, 1, 1, 1, 1 }, { -1, -1, -1, -1, 1, 1,
 			1, 1 }, { -1, -1, -1, -1, 1, 1, 1, 1 },
 			{ -1, -1, -1, -1, 1, 1, 1, 1 }, { -1, -1, -1, -1, 1, 1, 1, 1 }, {
@@ -677,15 +428,10 @@ extern "C" JNIEXPORT void JNICALL Java_com_cse3345_f13_Tanner_JNI_Segment(
 
 	bool firstRun = true;
 
-//while (true) {
-
 	int maxRad = 0;
 	int maxRadLimb = 0;
 
 	int max;
-
-	if (print)
-		start = clock();
 	maskRetried = false;
 
 	images->setAllData(0);
@@ -693,56 +439,23 @@ extern "C" JNIEXPORT void JNICALL Java_com_cse3345_f13_Tanner_JNI_Segment(
 	medianImage->setAllData(0);
 	mask->setAllData(0);
 	Hough->setAllData(0);
-	tempHough->setAllData(0);
-	Template->setAllData(0);
-	maskTemplate->setAllData(0);
 	maskRetry1->setAllData(0);
 	maskRetry2->setAllData(0);
-	//}
-	//firstRun = false;
-
-//return;
 
 	images->readBMP(fileName, path);
 
 	max = 0;
 
-	if (print)
-	{
-		declarationDuration += (clock() - start) / clocks;
-		start = clock();
-	}
-
 	MedianFilter(images, medianImage, 21);
 
-	if (print)
-	{
-		medianFilterDuration += (clock() - start) / clocks;
-		start = clock();
-	}
-
+	//get the max pixel value that exists in this image
 	max = sobel(medianImage, directional, gradientArr);
 
-	if (print)
-	{
-		sobelDuration += (clock() - start) / clocks;
-		start = clock();
-	}
-
+	//create the mask for the image
 	makeMask(medianImage, mask, gradient, gradientArr, max, maskThreshold);
 
-	if (print)
-	{
-		maskDuration += (clock() - start) / clocks;
-		start = clock();
-	}
-
+	//get the center of the eye
 	centerCoor = HoughTransform(directional, mask, Hough, gridSize, minR, maxR);
-	if (print)
-	{
-		HoughDuration += (clock() - start) / clocks;
-		start = clock();
-	}
 
 	//first find the pupil radius and draw it
 	//then find the limbic radius and draw it as well
@@ -752,16 +465,14 @@ extern "C" JNIEXPORT void JNICALL Java_com_cse3345_f13_Tanner_JNI_Segment(
 	LimbicRadius = findRad(minLimbRadDraw, maxLimbRadDraw, centerCoor, mask);
 	if (LimbicRadius > maxRadLimb)
 		maxRadLimb = LimbicRadius;
-	if (LimbicRadius == maxRadLimb)
-	{
+	if (LimbicRadius == maxRadLimb) {
 		makeMask(medianImage, maskRetry1, gradient, gradientArr, max,
 				maskThreshold2);
 		LimbicRadius = findRad(minLimbRadDraw, maxLimbRadDraw, centerCoor,
 				maskRetry1);
 		if (LimbicRadius == maxRadLimb)
 			maskRetried = true;
-		if (maskRetried)
-		{
+		if (maskRetried) {
 			makeMask(medianImage, maskRetry2, gradient, gradientArr, max,
 					maskThreshold3);
 			LimbicRadius = findRad(minLimbRadDraw, maxLimbRadDraw, centerCoor,
@@ -771,38 +482,21 @@ extern "C" JNIEXPORT void JNICALL Java_com_cse3345_f13_Tanner_JNI_Segment(
 
 	}
 
-	if (radius >= LimbicRadius - 30)
-	{
+	//if the pupil radius is greater than the limbic radius - 30 then refind the pupil radius
+	if (radius >= LimbicRadius - 30) {
 		radius = findRad(minRadDraw, maxRadDrawSmall, centerCoor, mask);
 	}
 
-	if (print)
-	{
-		findDuration += (clock() - start) / clocks;
-		start = clock();
-	}
-
-	unwrap(radius, LimbicRadius, centerCoor, unwrapped, images);
-	Haar(unwrapped, Template, maskTemplate, haar);
-
+	//print the 2 circles to the image
 	printCircle(centerCoor, images, radius);
 	printCircle(centerCoor, images, LimbicRadius);
-	if (print)
-	{
-		drawDuration += (clock() - start) / clocks;
-		start = clock();
-	}
 
+	//set variables for the return
 	pupil = radius;
 	Limbic = LimbicRadius;
 	X = centerCoor.first;
 	Y = centerCoor.second;
 
-	//string pathName = "/storage/emulated/0/Pictures/segmented/";
-
-	env->CallVoidMethod(jstats, setStats, pupil, Limbic, X, Y);
-
 	images->writeBMP(newFileName, path);
-
 }
 

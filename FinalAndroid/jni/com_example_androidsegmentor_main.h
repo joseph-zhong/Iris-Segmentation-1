@@ -9,7 +9,7 @@ extern "C" {
 #endif
 
 JNIEXPORT void JNICALL Java_com_cse3345_f13_Tanner_Segment
-  (JNIEnv *, jobject, jstring, jstring, jobject, jbyteArray);
+  (JNIEnv *, jobject, jstring, jstring, jbyteArray);
 
 #ifdef __cplusplus
 }

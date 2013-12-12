@@ -14,17 +14,17 @@
         android:id="@+id/Subject_ID"
         android:layout_width="wrap_content"
         android:layout_height="50dp"
-        android:layout_centerHorizontal="true"
+        android:layout_toLeftOf="@+id/ID_editText"
         android:gravity="center_vertical"
         android:text="Subject ID: "
         android:textColor="@android:color/white"
         android:textSize="20sp" />
 
     <EditText
-        android:id="@+id/subject_ID_editText"
+        android:id="@id/ID_editText"
         android:layout_width="wrap_content"
         android:layout_height="50dp"
-        android:layout_toRightOf="@+id/Subject_ID"
+        android:layout_centerHorizontal="true"
         android:gravity="center_vertical"
         android:inputType="number"
         android:text="ID#HERE"

@@ -37,23 +37,21 @@ public class MainActivity extends Activity {
 	private Camera camera;
 	private CameraPreview mPreview;
 	private FrameLayout cameraPreview;
-	private TextView selectedCameraStatus, subject;
+	private TextView selectedCameraStatus;
 	private MenuItem menuFront;
 	private boolean frontFlag;
 	private boolean left;
 	private int currCamera = -1, tempCamera;
 	private String subjectID = "IMG", mostRecentImageDir = null,
 			mostRecentImageName, mostRecentTimeStamp;
-	public byte[] toPass;
-	boolean save = false;
+	private byte[] toPass;
 	final private int segActivityInt = 0;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		selectedCameraStatus = (TextView) findViewById(R.id.CameraSelectionStatus);
-		subject = (TextView) findViewById(R.id.SubjectID);
+		selectedCameraStatus = (TextView) findViewById(R.id.Camera);
 		left = true;
 		// cameraChoice = (RadioGroup) findViewById(R.id.CameraSelection);
 		cameraPreview = (FrameLayout) findViewById(R.id.surfaceView);
@@ -63,7 +61,6 @@ public class MainActivity extends Activity {
 		setCamera(0);
 		// set the selected Camera status text
 		selectedCameraStatus.bringToFront();
-		subject.bringToFront();
 
 		setSelectedCameraStatus();
 	}
@@ -72,9 +69,6 @@ public class MainActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// menu selection
 		switch (item.getItemId()) {
-		case R.id.menu_quit:
-			onQuit();
-			return true;
 		case R.id.menu_select_camera:
 			return true;
 		case R.id.menu_back_camera:
@@ -82,9 +76,6 @@ public class MainActivity extends Activity {
 			return true;
 		case R.id.menu_front_camera:
 			menuCameraSelection(1);
-			return true;
-		case R.id.menu_set_subject_id:
-			setSubjectID();
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -100,7 +91,6 @@ public class MainActivity extends Activity {
 			mostRecentImageName = data.getStringExtra("fileName");
 			subjectID = data.getStringExtra("subjectID");
 			// update the textView for subjectID
-			subject.setText("Subject ID: " + subjectID);
 			if (data.getBooleanExtra("save", false))
 				saveToPhone();
 			return;
@@ -164,40 +154,6 @@ public class MainActivity extends Activity {
 
 	public void makeToast(Context context, String msg, int duration) {
 		Toast.makeText(context, msg, duration).show();
-	}
-
-	// prompts the user for a string and sets subjectID
-	public void setSubjectID() {
-		AlertDialog.Builder alert = new AlertDialog.Builder(this);
-
-		alert.setTitle("Set Subject ID");
-		alert.setMessage("Input Subject ID");
-
-		final EditText input = new EditText(this);
-		input.setInputType(android.text.InputType.TYPE_CLASS_NUMBER);
-		alert.setView(input);
-
-		alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int whichButton) {
-
-				String id = input.getText().toString();
-				subjectID = id;
-
-				subject.setText("Subject ID: " + subjectID);
-				String text = "Subject ID set to: " + id;
-
-				makeToast(getBaseContext(), text, Toast.LENGTH_SHORT);
-			}
-		});
-
-		alert.setNegativeButton("Cancel",
-				new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int whichButton) {
-						return;
-					}
-				});
-
-		alert.show();
 	}
 
 	public void setCamera(int i) {
@@ -266,20 +222,12 @@ public class MainActivity extends Activity {
 			frontFlag = true;
 	}
 
-	// the 'onclick' method for the menu camera selection
+	// set which camera based on menu
 	public void menuCameraSelection(int i) {
 		// set camera
 		setCamera(i);
 		// change status text
 		setSelectedCameraStatus();
-	}
-
-	// onclick for the menu option "Quit"
-	public void onQuit() {
-		// release the camera
-		releaseCamera();
-		// exit
-		this.finish();
 	}
 
 	// This function was not created by me. I found it on stackoverflow here:
@@ -308,7 +256,7 @@ public class MainActivity extends Activity {
 	}
 
 	// onclick method for capturing an image
-	public void captureImage(View view) {
+	public void takePicture(View view) {
 		camera.takePicture(null, null, mPicture);
 
 		camera.startPreview();

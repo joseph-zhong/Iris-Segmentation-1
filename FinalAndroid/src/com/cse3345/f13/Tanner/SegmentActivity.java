@@ -2,7 +2,6 @@ package com.cse3345.f13.Tanner;
 
 import java.io.File;
 
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -27,12 +26,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class SegmentActivity extends Activity {
-	private String currId, currFileName, sourceDir,
-			sourceFileName, timestamp, eye, newDir;
+	private String currId, currFileName, sourceDir, sourceFileName, timestamp,
+			eye, newDir;
 
-	private String sourceSegDir, sourceSegFilename,
-			newSegDir, newSegFilename;
-	
+	private String sourceSegDir, sourceSegFilename, newSegDir, newSegFilename;
+
 	private TextView idTextView, previewLabelTextView;
 	private EditText idEditText;
 	private RadioGroup eyeSel;
@@ -55,7 +53,7 @@ public class SegmentActivity extends Activity {
 		idTextView = (TextView) findViewById(R.id.Subject_ID);
 		previewLabelTextView = (TextView) findViewById(R.id.Preview_Label);
 		image = (ImageView) findViewById(R.id.Preview);
-		idEditText = (EditText) findViewById(R.id.subject_ID_editText);
+		idEditText = (EditText) findViewById(R.id.ID_editText);
 		eyeSel = (RadioGroup) findViewById(R.id.EyeSelection);
 		radioLeft = (RadioButton) findViewById(R.id.radioLeft);
 		saveButton = (Button) findViewById(R.id.Save_Button);
@@ -88,9 +86,6 @@ public class SegmentActivity extends Activity {
 		capturedImage = BitmapFactory.decodeFile(sourceDir + currFileName);
 		image.setImageBitmap(capturedImage);
 
-		
-		
-		
 		idEditText.addTextChangedListener(new TextWatcher() {
 
 			@Override
@@ -105,18 +100,17 @@ public class SegmentActivity extends Activity {
 			@Override
 			public void beforeTextChanged(CharSequence s, int start, int count,
 					int after) {
-				//unused
-				
+				// unused
+
 			}
 
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before,
 					int count) {
 				// unused in this method
-				
+
 			}
 		});
-		
 
 		// set which eye it is based on radio buttons
 		if (left != true) {
@@ -178,8 +172,7 @@ public class SegmentActivity extends Activity {
 		currFileName = currId + eye + timestamp;
 
 		// set the filename for the segmented image
-		newSegFilename = "SEG_" + currId + eye
-				+ timestamp;
+		newSegFilename = "SEG_" + currId + eye + timestamp;
 
 		// update the textView
 		previewLabelTextView.setText("Captured Image:\n" + currFileName);
@@ -226,25 +219,22 @@ public class SegmentActivity extends Activity {
 					Toast.LENGTH_LONG);
 		}
 
-			// update the directory path
-			//getNewSegDir();
+		// update the directory path
+		// getNewSegDir();
 
-			//rename segmented image
-			try {
-				File oldSegFile = new File(sourceSegDir
-						+ sourceSegFilename);
-				File newSegFile = new File(newSegDir
-						+ newSegFilename);
-				oldSegFile.renameTo(newSegFile);
-			} catch (Exception e) {
-				Log.e("TAG", "Error renaming the file");
-				e.printStackTrace();
-				makeToast(this, "There was an error renaming the file",
-						Toast.LENGTH_LONG);
-			}
-		
+		// rename segmented image
+		try {
+			File oldSegFile = new File(sourceSegDir + sourceSegFilename);
+			File newSegFile = new File(newSegDir + newSegFilename);
+			oldSegFile.renameTo(newSegFile);
+		} catch (Exception e) {
+			Log.e("TAG", "Error renaming the file");
+			e.printStackTrace();
+			makeToast(this, "There was an error renaming the file",
+					Toast.LENGTH_LONG);
+		}
 
-		//add stuff to intent
+		// add stuff to intent
 		returnIntent.putExtra("subjectID", currId);
 		returnIntent.putExtra("fileName", newSegFilename);
 		returnIntent.putExtra("leftEye", left);
@@ -261,7 +251,7 @@ public class SegmentActivity extends Activity {
 	// onClick for the discard button
 	public void discardButton(View view) {
 		discard = true;
-		
+
 		try {
 			File file = new File(sourceDir + sourceFileName);
 			file.delete();
@@ -274,8 +264,7 @@ public class SegmentActivity extends Activity {
 
 		// delete the segmented image
 		try {
-			File segFile = new File(sourceSegDir
-					+ sourceSegFilename);
+			File segFile = new File(sourceSegDir + sourceSegFilename);
 			segFile.delete();
 		} catch (Exception e) {
 			Log.e("TAG", "There was an error deleting the file");
@@ -284,7 +273,6 @@ public class SegmentActivity extends Activity {
 					Toast.LENGTH_LONG);
 		}
 
-		
 		returnIntent.putExtra("subjectID", currId);
 		returnIntent.putExtra("fileName", (String) null);
 		returnIntent.putExtra("leftEye", left);
@@ -303,11 +291,12 @@ public class SegmentActivity extends Activity {
 		alert.setTitle("Delete File");
 		alert.setMessage("This can not be undone.");
 
-		alert.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int whichButton) {
-				discardButton(view);
-			}
-		});
+		alert.setPositiveButton("Delete",
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {
+						discardButton(view);
+					}
+				});
 
 		alert.setNegativeButton("Cancel",
 				new DialogInterface.OnClickListener() {
@@ -324,7 +313,8 @@ public class SegmentActivity extends Activity {
 		if (!discard) {
 			saveButton.setEnabled(true);
 
-			// changes the image displayed from the captured image to the segmented
+			// changes the image displayed from the captured image to the
+			// segmented
 			storeImage();
 
 			segmentedImage = BitmapFactory.decodeFile(sourceDir
@@ -335,8 +325,7 @@ public class SegmentActivity extends Activity {
 					Toast.LENGTH_LONG);
 		} else {
 			try {
-				File segFile = new File(sourceSegDir
-						+ sourceSegFilename);
+				File segFile = new File(sourceSegDir + sourceSegFilename);
 				segFile.delete();
 			} catch (Exception e) {
 				Log.e("TAG", "There was an error deleting the file");
@@ -353,25 +342,56 @@ public class SegmentActivity extends Activity {
 				Uri.parse("file://" + sourceDir)));
 	}
 
+	// This is where the segmenting comes in by using JNI to integrate some C++
+	// code
+	// I have previously written to accept a grayscale BMP and segment the eye
+	// NOTE: I did not write the following classes in C++: CLAHE(this is a
+	// complicated algorithm
+	// used for this iris segmentation that does some histogram equilization
+	// and is used by a Haar filter to find the strongest edges in the image.
+	// these edges should be the limbic boundary(edge of the iris and sclera -
+	// white of the eye) and the pupil boundary between the pupil and iris.
+	// From these edges the segmentation then uses a Hough Transform using a
+	// directional gradient to find the tangent of all points on the edges
+	// if done correctly these tangent lines will all point inward to the
+	// center of the pupil from the limbic boundary and pupil boundary
+	// where the most points meet on the image SHOULD be the center of the pupil
+	// (which would also be the center of the iris).
+	// Then the segmentation uses the center to draw concentric circles out
+	// growing bigger each time and counting how many points on the circle are
+	// touching an edge. Then the circle with the most points on an edge is
+	// considered the best fit circle for the eye. These circles are drawn
+	// twice: once for the pupil boundary and once for the limbic boundary. The
+	// limbic boundary circle is allowed to be much larger than the pupil so
+	// that
+	// it will create 2 different cirlces instead of finding the same one twice
+	// Once the radii of these boundaries are found they would then be used to
+	// cut out the iris part of the eye to use later in Recognition (which is
+	// not done
+	// here. So for now all it does is circles the pupil and iris creating a
+	// sort of donut that contains the iris of the eye
+
 	private class segment extends AsyncTask<String, Void, Boolean> {
 
+		// simple conversion of char to string
 		public String charToString(char[] array, int start, int last) {
 			return new String(array, start, last - start);
 		}
 
+		// the pre-execute is just used to tell the user that the device is
+		// segmenting their image
 		@Override
 		protected void onPreExecute() {
-			makeToast(getBaseContext(), "Segmenting...", Toast.LENGTH_LONG);
+			makeToast(getBaseContext(), "Segmenting...", Toast.LENGTH_SHORT);
 		}
 
+		// Here is where all the logic happens and the JNI is called
 		protected Boolean doInBackground(String... args) {
 
 			args[0] += args[1];
 			String pathName = args[0];
 
 			pathName = pathName.substring(0, pathName.lastIndexOf("."));
-
-			Eye stats = new Eye();
 
 			String fileName = new String();
 			String path = new String();
@@ -401,12 +421,13 @@ public class SegmentActivity extends Activity {
 			JNI test = new JNI();
 
 			Log.w("test", "Pre segment");
-			test.Segment(fileName, path, stats, imgBytes);
+			test.Segment(fileName, path, imgBytes);
 			Log.w("test", "post segment");
 
 			return true;
 		}
 
+		// this just exits the asynctask
 		protected void onPostExecute(Boolean result) {
 			segComplete();
 		}

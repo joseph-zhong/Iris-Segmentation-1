@@ -2,13 +2,13 @@
 #include <jni.h>
 /* Header for class com_example_JNITest_Hello */
 
-#ifndef _Included_com_example_finalandroid_JNI
-#define _Included_com_example_finalandroid_JNI
+#ifndef _Included_com_cse3345_f13_Tanner_JNI
+#define _Included_com_cse3345_f13_Tanner_JNI
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-JNIEXPORT void JNICALL Java_com_example_finalandroid_Segment
+JNIEXPORT void JNICALL Java_com_cse3345_f13_Tanner_Segment
   (JNIEnv *, jobject, jstring, jstring, jobject, jbyteArray);
 
 #ifdef __cplusplus

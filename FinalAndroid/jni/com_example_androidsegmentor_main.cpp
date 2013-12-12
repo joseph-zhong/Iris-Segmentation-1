@@ -451,7 +451,7 @@ void Haar(Image *unwrap, Image *Template, Image *maskTemplate,
 
 }
 
-extern "C" JNIEXPORT void JNICALL Java_com_example_finalandroid_JNI_Segment(
+extern "C" JNIEXPORT void JNICALL Java_com_cse3345_f13_Tanner_JNI_Segment(
 		JNIEnv *env, jobject obj, jstring jfileName, jstring jpath,
 		jobject jstats, jbyteArray passed)
 {

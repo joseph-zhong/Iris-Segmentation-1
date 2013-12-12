@@ -5,7 +5,7 @@
  * should not be modified by hand.
  */
 
-package com.example.finalandroid;
+package com.cse3345.f13.Tanner;
 
 public final class R {
     public static final class attr {

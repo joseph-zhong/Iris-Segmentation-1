@@ -1,5 +1,5 @@
 /** Automatically generated file. DO NOT MODIFY */
-package com.example.finalandroid;
+package com.cse3345.f13.Tanner;
 
 public final class BuildConfig {
     public final static boolean DEBUG = true;

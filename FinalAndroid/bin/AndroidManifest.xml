@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest
         xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.example.finalandroid">
+          package="com.cse3345.f13.Tanner">
     <uses-sdk
             android:minSdkVersion="14"/>
     <uses-feature
@@ -27,7 +27,7 @@
         </activity>
         <activity
             android:name=".SegmentActivity"
-            android:parentActivityName="com.example.finalandroid.MainActivity"
+            android:parentActivityName="com.cse3345.f13.Tanner.MainActivity"
             android:screenOrientation="portrait">
         </activity>
     </application>

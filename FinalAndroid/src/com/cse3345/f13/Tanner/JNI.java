@@ -1,4 +1,4 @@
-package com.example.finalandroid;
+package com.cse3345.f13.Tanner;
 
 
 public class JNI {

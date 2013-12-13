@@ -17,8 +17,8 @@ public class CameraPreview extends SurfaceView implements
 		super(context);
 		mCamera = camera;
 
-		// Install a SurfaceHolder.Callback so we get notified when the
-		// underlying surface is created and destroyed.
+		// SurfaceHolder.Callback so it notifies when surface is
+		// created/destroyed
 		mHolder = getHolder();
 		mHolder.addCallback(this);
 	}

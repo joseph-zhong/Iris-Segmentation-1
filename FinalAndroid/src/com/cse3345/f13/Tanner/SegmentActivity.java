@@ -37,7 +37,7 @@ public class SegmentActivity extends Activity {
 	private Button saveButton;
 	private ImageView image;
 	private Intent returnIntent, sourceIntent;
-	private boolean left, discard = false;
+	private boolean left, delete = false;
 	private Bitmap capturedImage, segmentedImage;
 	public byte[] imgBytes;
 
@@ -70,7 +70,7 @@ public class SegmentActivity extends Activity {
 
 		left = sourceIntent.getBooleanExtra("leftEye", true);
 
-		// initilize the values in the textViews to the passed values
+		//set text views to passed strings
 		idTextView.setText("Subject ID: ");
 		idEditText.setText(currId);
 		previewLabelTextView.setText("Captured Image:\n" + currFileName);
@@ -124,7 +124,7 @@ public class SegmentActivity extends Activity {
 
 	@Override
 	public void onBackPressed() {
-		confirmDiscard(getCurrentFocus());
+		confirmDelete(getCurrentFocus());
 	}
 
 	public void getOrigDir() {
@@ -245,8 +245,8 @@ public class SegmentActivity extends Activity {
 	}
 
 	// onClick for the delete button
-	public void discardButton(View view) {
-		discard = true;
+	public void deleteButton(View view) {
+		delete = true;
 
 		try {
 			File file = new File(sourceDir + sourceFileName);
@@ -280,7 +280,7 @@ public class SegmentActivity extends Activity {
 	}
 
 	// confimration pop-up for deleting an image
-	public void confirmDiscard(final View view) {
+	public void confirmDelete(final View view) {
 		AlertDialog.Builder alert = new AlertDialog.Builder(this);
 
 		alert.setTitle("Delete File");
@@ -289,7 +289,7 @@ public class SegmentActivity extends Activity {
 		alert.setPositiveButton("Delete",
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int whichButton) {
-						discardButton(view);
+						deleteButton(view);
 					}
 				});
 
@@ -305,7 +305,7 @@ public class SegmentActivity extends Activity {
 
 	// displays the segmented image, and enables the save button
 	public void segComplete() {
-		if (!discard) {
+		if (!delete) {
 			saveButton.setEnabled(true);
 
 			// changes the image displayed from the captured image to the

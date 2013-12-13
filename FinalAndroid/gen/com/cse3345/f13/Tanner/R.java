@@ -25,7 +25,7 @@ public final class R {
     }
     public static final class id {
         public static final int Camera=0x7f080000;
-        public static final int Discard_Button=0x7f080009;
+        public static final int Delete_Button=0x7f080009;
         public static final int EyeSelection=0x7f080006;
         public static final int ID_editText=0x7f080004;
         public static final int Preview=0x7f080005;

@@ -60,7 +60,7 @@
         android:text="@string/save_image" />
 
     <Button
-        android:id="@+id/Discard_Button"
+        android:id="@+id/Delete_Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -68,7 +68,7 @@
         android:layout_marginBottom="15dp"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
-        android:onClick="confirmDiscard"
+        android:onClick="confirmDelete"
         android:text="@string/delete_image" />
 
     <RadioGroup

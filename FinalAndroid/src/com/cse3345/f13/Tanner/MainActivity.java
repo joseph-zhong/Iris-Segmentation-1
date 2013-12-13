@@ -52,9 +52,9 @@ public class MainActivity extends Activity {
 		cameraPreview = (FrameLayout) findViewById(R.id.surfaceView);
 
 		makeCameraList();
-		// set the camera preview to the default(back)
+		// set the camera preview to the back camera
 		setCamera(0);
-		// set the selected Camera status text
+		// set the selected Camera text
 		selectedCameraStatus.bringToFront();
 
 		setSelectedCameraStatus();
@@ -162,8 +162,6 @@ public class MainActivity extends Activity {
 	public void setCamera(int i) {
 		if (i == currCamera)
 			return;
-
-		// release camera
 		releaseCamera();
 
 		// set which camera is displayed
